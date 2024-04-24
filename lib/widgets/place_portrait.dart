@@ -41,13 +41,15 @@ class PlacePortrait extends StatelessWidget {
                   color: colorScheme.onErrorContainer,
                   size: 50,
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  'Error loading image ${place.title}',
-                  style: textTheme.titleSmall!.copyWith(
-                    color: colorScheme.onErrorContainer,
+                if (height > 100) const SizedBox(width: 10),
+                if (height > 100)
+                  Text(
+                    'Error loading image ${place.title}',
+                    style: textTheme.titleSmall!.copyWith(
+                      color: colorScheme.onErrorContainer,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
               ],
             ),
           ),
