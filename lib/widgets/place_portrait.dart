@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -14,6 +16,13 @@ class PlacePortrait extends StatelessWidget {
     this.height = 300,
   });
 
+  dynamic _getImageProvider() {
+    final isNetworkImage = place.imageUrl.startsWith('http');
+    return isNetworkImage
+        ? CachedNetworkImageProvider(place.imageUrl)
+        : FileImage(File(place.imageUrl));
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -23,10 +32,7 @@ class PlacePortrait extends StatelessWidget {
       tag: place.id,
       child: FadeInImage(
         placeholder: MemoryImage(kTransparentImage),
-        image: CachedNetworkImageProvider(
-          place.imageUrl,
-          errorListener: (err) => debugPrint('Error loading image: $err'),
-        ),
+        image: _getImageProvider(),
         imageErrorBuilder: (context, error, stackTrace) => Container(
           height: height,
           decoration: BoxDecoration(

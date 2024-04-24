@@ -105,7 +105,7 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
         id: id,
         title: _titleController.text,
         address: _addressController.text,
-        imageUrl: 'https://picsum.photos/seed/$id/200',
+        imageUrl: _pickedImage!.path,
         latitude: 0,
         longitude: 0,
       );
