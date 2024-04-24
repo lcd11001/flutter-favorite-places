@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:favorite_places/models/place.dart';
+import 'package:favorite_places/providers/places_provider.dart';
+
+import 'package:favorite_places/widgets/place_text_field.dart';
+
 class NewPlaceScreen extends ConsumerStatefulWidget {
   const NewPlaceScreen({super.key});
 
@@ -11,10 +16,13 @@ class NewPlaceScreen extends ConsumerStatefulWidget {
 class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
+  final _addressController = TextEditingController();
+  bool _isSaving = false;
 
   @override
   void dispose() {
     _titleController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -31,22 +39,30 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
             key: _formKey,
             child: Column(
               children: [
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Title'),
-                  keyboardType: TextInputType.text,
+                PlaceTextField(
+                  titleController: _titleController,
+                  title: 'Title',
+                  hintErrorText: 'Enter place title',
                   maxLength: 50,
-                  textInputAction: TextInputAction.next,
-                  controller: _titleController,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a title.';
-                    }
-                    return null;
-                  },
+                ),
+                PlaceTextField(
+                  titleController: _addressController,
+                  title: 'Address',
+                  hintErrorText: 'Enter place address',
+                  maxLength: 50,
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
-                  icon: const Icon(Icons.add),
+                  icon: _isSaving
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(),
+                        )
+                      : const Icon(
+                          Icons.add,
+                          size: 20,
+                        ),
                   onPressed: _saveNewPlace,
                   label: const Text('Add Place'),
                 )
@@ -60,8 +76,27 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
 
   void _saveNewPlace() {
     if (_formKey.currentState!.validate()) {
-      // Add place
+      setState(() {
+        _isSaving = true;
+      });
+
+      // Save form
       _formKey.currentState!.save();
+
+      final id = uuid.v4();
+      Place newPlace = Place(
+        id: id,
+        title: _titleController.text,
+        address: _addressController.text,
+        imageUrl: 'https://picsum.photos/seed/$id/200',
+        latitude: 0,
+        longitude: 0,
+      );
+
+      // Add place
+      ref.read(asyncPlaceProvider.notifier).addPlace(newPlace).then((value) {
+        Navigator.of(context).pop();
+      });
     }
   }
 }

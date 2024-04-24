@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:favorite_places/models/place.dart';
@@ -6,9 +5,6 @@ import 'package:favorite_places/models/place.dart';
 part 'places_provider.g.dart';
 
 const uuid = Uuid();
-final simulateNetworkDelay = Future.delayed(
-  const Duration(seconds: 1),
-);
 
 @riverpod
 class AsyncPlace extends _$AsyncPlace {
@@ -18,7 +14,7 @@ class AsyncPlace extends _$AsyncPlace {
   }
 
   Future<List<Place>> _fetchPlaces() async {
-    await simulateNetworkDelay;
+    await Future.delayed(const Duration(seconds: 1));
 
     return List.generate(
       10,
@@ -38,14 +34,16 @@ class AsyncPlace extends _$AsyncPlace {
 
   Future<void> addPlace(Place place) async {
     state = await AsyncValue.guard(() async {
-      await simulateNetworkDelay;
+      await Future.delayed(const Duration(seconds: 1));
+
       return [place, ...state.value ?? []];
     });
   }
 
   Future<void> removePlace(String id) async {
     state = await AsyncValue.guard(() async {
-      await simulateNetworkDelay;
+      await Future.delayed(const Duration(seconds: 1));
+
       final remainPlaces = state.value?.where((place) => place.id != id);
       return [...remainPlaces ?? []];
     });
