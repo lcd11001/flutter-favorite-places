@@ -1,9 +1,10 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
+import 'package:uuid/uuid.dart';
 import 'package:favorite_places/models/place.dart';
 
 part 'places_provider.g.dart';
+
+const uuid = Uuid();
 
 @riverpod
 class AsyncPlace extends _$AsyncPlace {
@@ -17,14 +18,17 @@ class AsyncPlace extends _$AsyncPlace {
 
     return List.generate(
       10,
-      (index) => Place(
-        id: index.toString(),
-        title: 'Place title $index',
-        address: 'Place address $index',
-        imageUrl: 'https://picsum.photos/seed/$index/200',
-        latitude: 0,
-        longitude: 0,
-      ),
+      (index) {
+        final id = uuid.v4();
+        return Place(
+          id: id,
+          title: 'Place title ${index + 1}',
+          address: 'Place address ${index + 1}',
+          imageUrl: 'https://picsum.photos/seed/$id/200',
+          latitude: 0,
+          longitude: 0,
+        );
+      },
     );
   }
 

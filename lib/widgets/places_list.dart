@@ -10,19 +10,17 @@ class PlacesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (places.isEmpty) {
+      return const Center(
+        child: Text('No places added yet, start adding some!'),
+      );
+    }
+
     return ListView.builder(
       itemCount: places.length,
       itemBuilder: (ctx, index) {
         return PlacesListItem(place: places[index]);
       },
-    );
-  }
-
-  void _openPlaceDetailScreen(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) => const PlaceDetailScreen(),
-      ),
     );
   }
 }
