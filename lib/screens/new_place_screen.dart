@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/providers/places_provider.dart';
 
-import 'package:favorite_places/widgets/image_input.dart';
+import 'package:favorite_places/widgets/image_form_input.dart';
 import 'package:favorite_places/widgets/place_text_field.dart';
 
 class NewPlaceScreen extends ConsumerStatefulWidget {
@@ -18,6 +20,7 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _addressController = TextEditingController();
+  File? _pickedImage;
   bool _isSaving = false;
 
   @override
@@ -54,7 +57,17 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
                   maxLength: 50,
                 ),
                 const SizedBox(height: 16),
-                ImageInput(),
+                ImageFormInput(
+                  onPickedImage: (image) {
+                    _pickedImage = image;
+                  },
+                  validator: (image) {
+                    if (image == null) {
+                      return 'Please pick an image';
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
                   icon: _isSaving
