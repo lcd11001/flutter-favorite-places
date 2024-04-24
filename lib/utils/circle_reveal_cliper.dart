@@ -8,7 +8,7 @@ class CircleRevealCliper extends CustomClipper<Rect> {
   @override
   Rect getClip(Size size) {
     final radius = size.width * fraction;
-    final diameter = 2 * radius;
+    // final diameter = 2 * radius;
     final center = Offset(size.width / 2, size.height / 2);
     final topLeft = center - Offset(radius, radius);
     final bottomRight = center + Offset(radius, radius);

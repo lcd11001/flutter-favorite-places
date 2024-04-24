@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:favorite_places/utils/circle_reveal_cliper.dart';
 import 'package:favorite_places/widgets/place_portrait.dart';
 import 'package:flutter/material.dart';
 

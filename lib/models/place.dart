@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+// Execute the following command in the terminal to generate the part files:
+// flutter pub run build_runner build
 part 'place.freezed.dart';
 part 'place.g.dart';
 
