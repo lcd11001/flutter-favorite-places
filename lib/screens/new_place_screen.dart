@@ -95,6 +95,7 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
 
       // Add place
       ref.read(asyncPlaceProvider.notifier).addPlace(newPlace).then((value) {
+        // waiting until the new place is added
         Navigator.of(context).pop();
       });
     }

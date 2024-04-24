@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:favorite_places/models/place.dart';
 
+import '../widgets/place_text.dart';
+
 class PlaceDetailScreen extends StatelessWidget {
   final Place place;
   const PlaceDetailScreen({
@@ -14,31 +16,28 @@ class PlaceDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Place Detail'),
+        title: Text(place.title),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            PlacePortrait(place: place),
-            const SizedBox(height: 10),
-            Text(
-              place.title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              PlacePortrait(place: place),
+              const SizedBox(height: 16),
+              PlaceText(
+                content: place.title,
+                size: PlaceTextSize.large,
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              place.address,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
+              const SizedBox(height: 32),
+              PlaceText(
+                content: place.address,
+                size: PlaceTextSize.small,
+                alignment: TextAlign.justify,
               ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+              const SizedBox(height: 64),
+            ],
+          ),
         ),
       ),
     );
