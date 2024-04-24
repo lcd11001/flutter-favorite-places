@@ -1,25 +1,21 @@
+import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/screens/place_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class PlacesListItem extends StatelessWidget {
+  final Place place;
   const PlacesListItem({
     super.key,
-    required this.title,
-    required this.address,
-    required this.imageUrl,
+    required this.place,
   });
-
-  final String title;
-  final String address;
-  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(title),
-      subtitle: Text(address),
+      title: Text(place.title),
+      subtitle: Text(place.address),
       leading: CircleAvatar(
-        backgroundImage: NetworkImage(imageUrl),
+        backgroundImage: NetworkImage(place.imageUrl),
       ),
       onTap: () {
         _openPlaceDetailScreen(context);

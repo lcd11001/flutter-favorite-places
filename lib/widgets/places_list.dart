@@ -1,21 +1,19 @@
+import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/widgets/places_list_item.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/place_detail_screen.dart';
+import 'package:favorite_places/screens/place_detail_screen.dart';
 
 class PlacesList extends StatelessWidget {
-  const PlacesList({super.key});
+  final List<Place> places;
+  const PlacesList({super.key, required this.places});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 10,
+      itemCount: places.length,
       itemBuilder: (ctx, index) {
-        return PlacesListItem(
-          title: 'Place title',
-          address: 'Place address',
-          imageUrl: 'https://picsum.photos/200',
-        );
+        return PlacesListItem(place: places[index]);
       },
     );
   }

@@ -1,13 +1,18 @@
+import 'package:favorite_places/models/place.dart';
+import 'package:favorite_places/providers/places_provider.dart';
 import 'package:favorite_places/widgets/places_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../widgets/new_place_form.dart';
+import 'package:favorite_places/widgets/new_place_form.dart';
 
-class PlacesScreen extends StatelessWidget {
+class PlacesScreen extends ConsumerWidget {
   const PlacesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncPlaces = ref.watch(asyncPlaceProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Places'),
@@ -20,7 +25,17 @@ class PlacesScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: PlacesList(),
+      body: switch (asyncPlaces) {
+        AsyncData(:final value) => PlacesList(
+            places: value,
+          ),
+        AsyncError(:final error) => Center(
+            child: Text('An error occurred: $error'),
+          ),
+        _ => const Center(
+            child: CircularProgressIndicator(),
+          ),
+      },
     );
   }
 
