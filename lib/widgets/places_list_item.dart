@@ -17,11 +17,19 @@ class PlacesListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return ListTile(
       visualDensity: const VisualDensity(
         vertical: VisualDensity.maximumDensity,
       ),
-      title: Text(place.title),
+      title: Text(
+        place.title,
+        style: textTheme.titleMedium!.copyWith(
+          color: colorScheme.onBackground,
+        ),
+      ),
       subtitle: Text(place.address),
       leading: CircleAvatar(
         radius: avatarRadius,
