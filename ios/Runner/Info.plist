@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Your app requires access to the photo library for uploading and sharing your favorite place photos.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Your app requires access to the camera for taking favorite place photos.</string>
 </dict>
 </plist>
