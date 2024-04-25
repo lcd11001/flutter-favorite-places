@@ -1,12 +1,14 @@
 import 'dart:io';
 
-import 'package:favorite_places/widgets/location_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:favorite_places/models/place.dart';
+import 'package:favorite_places/models/place_location.dart';
+
 import 'package:favorite_places/providers/places_provider.dart';
 
+import 'package:favorite_places/widgets/location_form_input.dart';
 import 'package:favorite_places/widgets/image_form_input.dart';
 import 'package:favorite_places/widgets/place_text_field.dart';
 
@@ -20,14 +22,13 @@ class NewPlaceScreen extends ConsumerStatefulWidget {
 class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
-  final _addressController = TextEditingController();
+  PlaceLocation? _pickedLocation;
   File? _pickedImage;
   bool _isSaving = false;
 
   @override
   void dispose() {
     _titleController.dispose();
-    _addressController.dispose();
     super.dispose();
   }
 
@@ -51,13 +52,6 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
                   maxLength: 50,
                 ),
                 const SizedBox(height: 16),
-                PlaceTextField(
-                  titleController: _addressController,
-                  title: 'Address',
-                  hintErrorText: 'Enter place address',
-                  maxLength: 50,
-                ),
-                const SizedBox(height: 16),
                 ImageFormInput(
                   onPickedImage: (image) {
                     _pickedImage = image;
@@ -70,7 +64,17 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
-                LocationInput(),
+                LocationFormInput(
+                  onPickedLocation: (location) {
+                    _pickedLocation = location;
+                  },
+                  validator: (location) {
+                    if (location == null) {
+                      return 'Please pick a location';
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
                   icon: _isSaving
@@ -107,10 +111,10 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
       Place newPlace = Place(
         id: id,
         title: _titleController.text,
-        address: _addressController.text,
+        address: _pickedLocation!.address,
         imageUrl: _pickedImage!.path,
-        latitude: 0,
-        longitude: 0,
+        latitude: _pickedLocation!.latitude,
+        longitude: _pickedLocation!.longitude,
       );
 
       // Add place

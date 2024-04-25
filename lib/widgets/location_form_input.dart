@@ -1,33 +1,32 @@
-import 'dart:io';
-
-import 'package:favorite_places/widgets/image_input.dart';
+import 'package:favorite_places/models/place_location.dart';
+import 'package:favorite_places/widgets/location_input.dart';
 import 'package:flutter/material.dart';
 
-class ImageFormInput extends FormField<File> {
-  final void Function(File pickedImage) onPickedImage;
+class LocationFormInput extends FormField<PlaceLocation> {
+  final void Function(PlaceLocation location) onPickedLocation;
 
-  ImageFormInput({
+  LocationFormInput({
     super.key,
     super.validator,
     super.onSaved,
     super.restorationId,
-    required this.onPickedImage,
+    required this.onPickedLocation,
   }) : super(
           initialValue: null,
           enabled: true,
           autovalidateMode: AutovalidateMode.disabled,
-          builder: (FormFieldState<File> state) {
+          builder: (FormFieldState<PlaceLocation> state) {
             final textTheme = Theme.of(state.context).textTheme;
             final colorScheme = Theme.of(state.context).colorScheme;
-            debugPrint('ImageFormInput state: ${state.hasError}');
+            debugPrint('LocationFormInput state: ${state.hasError}');
 
             return Column(
               children: [
-                ImageInput(
-                  onPickedImage: (image) {
-                    state.didChange(image);
+                LocationInput(
+                  onPickedLocation: (location) {
+                    state.didChange(location);
                     state.validate();
-                    onPickedImage(image);
+                    onPickedLocation(location);
                   },
                 ),
                 if (state.hasError)

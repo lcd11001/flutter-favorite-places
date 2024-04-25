@@ -28,6 +28,7 @@ class PlaceTextField extends StatelessWidget {
       maxLength: maxLength,
       textInputAction: TextInputAction.next,
       controller: titleController,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return hintErrorText;

@@ -18,7 +18,7 @@ class GoogleMapsApi {
         }),
       );
 
-      debugPrint("Response: ${response.body}");
+      // debugPrint("Response: ${response.body}");
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = json.decode(response.body);
@@ -46,7 +46,7 @@ class GoogleMapsApi {
         }),
       );
 
-      debugPrint("Response: ${response.body}");
+      // debugPrint("Response: ${response.body}");
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = json.decode(response.body);
