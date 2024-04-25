@@ -22,6 +22,13 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def flutterMinSdkVersion = localProperties.getProperty('flutter.minSdkVersion')
+if (flutterMinSdkVersion == null) {
+    // flutter doctor -v to get your installed location
+    // <flutter installed path>/packages/flutter_tools/gradle/flutter.gradle
+    flutterMinSdkVersion = flutter.minSdkVersion
+}
+
 android {
     namespace "com.lcdsoft.flutter.favorite_places"
     compileSdk flutter.compileSdkVersion
@@ -45,7 +52,7 @@ android {
         applicationId "com.lcdsoft.flutter.favorite_places"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion flutterMinSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
