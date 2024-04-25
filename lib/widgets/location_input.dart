@@ -1,3 +1,4 @@
+import 'package:favorite_places/api/google_maps_api.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
@@ -15,6 +16,7 @@ class LocationInput extends StatefulWidget {
 
 class _LocationInputState extends State<LocationInput> {
   LocationData? _pickedLocation;
+  String? _pickedAddress;
   bool _isGettingLocation = false;
 
   void _getCurrentLocation() async {
@@ -46,9 +48,13 @@ class _LocationInputState extends State<LocationInput> {
 
     locationData = await location.getLocation();
     debugPrint('Location: ${locationData.latitude}, ${locationData.longitude}');
+    final address = await GoogleMapsApi.getAddress(
+        locationData.latitude!, locationData.longitude!);
+    debugPrint('Address: $address');
 
     setState(() {
       _pickedLocation = locationData;
+      _pickedAddress = address;
       _isGettingLocation = false;
     });
   }
@@ -73,7 +79,7 @@ class _LocationInputState extends State<LocationInput> {
             child: Text(
               _pickedLocation == null
                   ? 'No Location Chosen'
-                  : 'Location Chosen (${_pickedLocation!.latitude}, ${_pickedLocation!.longitude})',
+                  : 'Location Chosen (${_pickedLocation!.latitude}, ${_pickedLocation!.longitude})\n$_pickedAddress',
               style: textTheme.labelLarge!.copyWith(
                 color: colorScheme.primary,
               ),
