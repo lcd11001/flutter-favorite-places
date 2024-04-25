@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
   // final Function onSelectPlace;
@@ -15,6 +14,45 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
+  LocationData? _pickedLocation;
+  bool _isGettingLocation = false;
+
+  void _getCurrentLocation() async {
+    Location location = Location.instance;
+
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    LocationData locationData;
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    setState(() {
+      _isGettingLocation = true;
+    });
+
+    locationData = await location.getLocation();
+    debugPrint('Location: ${locationData.latitude}, ${locationData.longitude}');
+
+    setState(() {
+      _pickedLocation = locationData;
+      _isGettingLocation = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -33,7 +71,9 @@ class _LocationInputState extends State<LocationInput> {
           width: double.infinity,
           child: Center(
             child: Text(
-              'No Location Chosen',
+              _pickedLocation == null
+                  ? 'No Location Chosen'
+                  : 'Location Chosen (${_pickedLocation!.latitude}, ${_pickedLocation!.longitude})',
               style: textTheme.labelLarge!.copyWith(
                 color: colorScheme.primary,
               ),
@@ -47,8 +87,17 @@ class _LocationInputState extends State<LocationInput> {
             children: [
               Expanded(
                 child: TextButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.location_on),
+                  onPressed: _getCurrentLocation,
+                  icon: _isGettingLocation
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(),
+                        )
+                      : const Icon(
+                          Icons.location_on,
+                          size: 20,
+                        ),
                   label: const Text('Current Location'),
                 ),
               ),
@@ -58,7 +107,10 @@ class _LocationInputState extends State<LocationInput> {
               Expanded(
                 child: TextButton.icon(
                   onPressed: () {},
-                  icon: const Icon(Icons.map),
+                  icon: const Icon(
+                    Icons.map,
+                    size: 20,
+                  ),
                   label: const Text('Select on Map'),
                 ),
               ),

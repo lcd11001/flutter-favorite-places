@@ -57,7 +57,10 @@ class _ImageInputState extends State<ImageInput> {
   Widget _buildCameraButton() {
     return TextButton.icon(
       onPressed: _takePicture,
-      icon: const Icon(Icons.camera),
+      icon: const Icon(
+        Icons.camera,
+        size: 20,
+      ),
       label: const Text('Take Picture'),
     );
   }
