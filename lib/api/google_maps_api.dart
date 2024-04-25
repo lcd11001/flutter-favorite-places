@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class GoogleMapsApi {
-  static const String kKey = 'Your API Key Here';
+  static String kKey = 'Your API Key Here';
   static const String kBaseUrl = 'maps.googleapis.com';
   static const String kPath = 'maps/api/geocode/';
   static const String kOutputFormat = 'json'; // 'xml' or 'json'

@@ -10,6 +10,7 @@ dependencies:
   cached_network_image: ^3.3.1
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.1.0
   flutter_riverpod: ^2.5.1
   freezed_annotation: ^2.4.1
   google_fonts: ^6.2.1
@@ -32,5 +33,13 @@ dev_dependencies:
   freezed: ^2.5.2
   json_serializable: ^6.7.1
 
+# The following section is specific to Flutter packages.
 flutter:
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
   uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - .env

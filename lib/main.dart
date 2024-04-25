@@ -1,5 +1,7 @@
+import 'package:favorite_places/api/google_maps_api.dart';
 import 'package:favorite_places/screens/places_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,7 +27,13 @@ final theme = ThemeData.dark(useMaterial3: true).copyWith(
   ),
 );
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: '.env');
+  if (dotenv.env.containsKey('GOOGLE_MAPS_API_KEY')) {
+    GoogleMapsApi.kKey = dotenv.env['GOOGLE_MAPS_API_KEY']!;
+    debugPrint('dotevn::Google Maps API Key: ${GoogleMapsApi.kKey}');
+  }
+
   runApp(const MainApp());
 }
 
