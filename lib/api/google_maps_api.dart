@@ -6,13 +6,14 @@ import 'package:http/http.dart' as http;
 class GoogleMapsApi {
   static String kKey = 'Your API Key Here';
   static const String kBaseUrl = 'maps.googleapis.com';
-  static const String kPath = 'maps/api/geocode/';
+  static const String kPathGeoCode = 'maps/api/geocode/';
+  static const String kPathStaticMap = 'maps/api/staticmap';
   static const String kOutputFormat = 'json'; // 'xml' or 'json'
 
   static Future<String> getPlace(String place) async {
     try {
       final response = await http.get(
-        Uri.https(kBaseUrl, kPath + kOutputFormat, <String, String>{
+        Uri.https(kBaseUrl, kPathGeoCode + kOutputFormat, <String, String>{
           'address': Uri.encodeQueryComponent(place),
           'key': kKey,
         }),
@@ -40,7 +41,7 @@ class GoogleMapsApi {
   static Future<String> getAddress(double latitude, double longitude) async {
     try {
       final response = await http.get(
-        Uri.https(kBaseUrl, kPath + kOutputFormat, <String, String>{
+        Uri.https(kBaseUrl, kPathGeoCode + kOutputFormat, <String, String>{
           'latlng': '$latitude,$longitude',
           'key': kKey,
         }),
@@ -63,5 +64,23 @@ class GoogleMapsApi {
       debugPrint("getAddress Exception: $exception");
     }
     return 'Unknown address';
+  }
+
+  static String getStaticMapImageUrl(
+    double latitude,
+    double longitude, {
+    int zoom = 16,
+    int width = 600,
+    int height = 300,
+    String mapType = 'roadmap', // 'satellite', 'hybrid', 'terrain
+  }) {
+    return Uri.https(kBaseUrl, kPathStaticMap, <String, String>{
+      'center': '$latitude,$longitude',
+      'zoom': '$zoom',
+      'size': '${width}x$height',
+      'markers': 'color:red|$latitude,$longitude',
+      'maptype': mapType,
+      'key': kKey,
+    }).toString();
   }
 }

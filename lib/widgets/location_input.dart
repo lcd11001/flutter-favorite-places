@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:favorite_places/api/google_maps_api.dart';
 import 'package:favorite_places/models/place_location.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,72 @@ class _LocationInputState extends State<LocationInput> {
     widget.onPickedLocation(_pickedLocation!);
   }
 
+  Widget buildPreviewMap() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    if (_isGettingLocation && _pickedLocation == null) {
+      return Center(
+        child: CircularProgressIndicator(
+          color: colorScheme.onSurface,
+        ),
+      );
+    }
+
+    if (_pickedLocation == null) {
+      return Center(
+        child: Text(
+          'No Location Chosen',
+          style: textTheme.labelLarge!.copyWith(
+            color: colorScheme.primary,
+          ),
+        ),
+      );
+    }
+
+    return Stack(
+      children: [
+        CachedNetworkImage(
+          width: double.infinity,
+          height: double.infinity,
+          fit: BoxFit.cover,
+          imageUrl: GoogleMapsApi.getStaticMapImageUrl(
+            _pickedLocation!.latitude,
+            _pickedLocation!.longitude,
+            zoom: 16,
+          ),
+          placeholder: (context, url) => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          errorWidget: (context, url, error) => const Center(
+            child: Icon(
+              Icons.error,
+              size: 40,
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 8,
+          left: 8,
+          right: 8,
+          child: Text(
+            _pickedLocation!.address,
+            style: textTheme.labelLarge!.copyWith(
+              color: colorScheme.onInverseSurface,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        if (_isGettingLocation)
+          Center(
+            child: CircularProgressIndicator(
+              color: colorScheme.onInverseSurface,
+            ),
+          ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -81,16 +148,7 @@ class _LocationInputState extends State<LocationInput> {
           height: 170,
           width: double.infinity,
           padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Text(
-              _pickedLocation == null
-                  ? 'No Location Chosen'
-                  : 'Location Chosen (${_pickedLocation!.latitude}, ${_pickedLocation!.longitude})\n${_pickedLocation!.address}',
-              style: textTheme.labelLarge!.copyWith(
-                color: colorScheme.primary,
-              ),
-            ),
-          ),
+          child: buildPreviewMap(),
         ),
         IntrinsicWidth(
           child: Row(
@@ -100,16 +158,10 @@ class _LocationInputState extends State<LocationInput> {
               Expanded(
                 child: TextButton.icon(
                   onPressed: _getCurrentLocation,
-                  icon: _isGettingLocation
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(),
-                        )
-                      : const Icon(
-                          Icons.location_on,
-                          size: 20,
-                        ),
+                  icon: const Icon(
+                    Icons.location_on,
+                    size: 20,
+                  ),
                   label: const Text('Current Location'),
                 ),
               ),
