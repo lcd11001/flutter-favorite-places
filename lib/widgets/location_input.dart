@@ -71,8 +71,21 @@ class _LocationInputState extends State<LocationInput> {
 
     if (_isGettingLocation && _pickedLocation == null) {
       return Center(
-        child: CircularProgressIndicator(
-          color: colorScheme.onSurface,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            CircularProgressIndicator(
+              color: colorScheme.primary,
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              'Getting location...',
+              style: textTheme.labelLarge!.copyWith(
+                color: colorScheme.primary,
+              ),
+            )
+          ],
         ),
       );
     }
