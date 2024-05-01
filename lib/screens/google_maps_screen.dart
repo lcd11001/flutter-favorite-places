@@ -21,6 +21,19 @@ class GoogleMapsScreen extends StatefulWidget {
 }
 
 class _GoogleMapsScreenState extends State<GoogleMapsScreen> {
+  late LatLng? _pickedLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.isSelecting) {
+      _pickedLocation = LatLng(
+        widget.location.latitude,
+        widget.location.longitude,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,16 +57,25 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen> {
           ),
           zoom: 16,
         ),
-        // onTap: widget.isSelecting ? _selectLocation : null,
-        markers: {
-          Marker(
-            markerId: const MarkerId('m1'),
-            position: LatLng(
-              widget.location.latitude,
-              widget.location.longitude,
-            ),
-          ),
+        onTap: (position) {
+          if (widget.isSelecting) {
+            setState(() {
+              _pickedLocation = position;
+            });
+          }
         },
+        markers: (widget.isSelecting && _pickedLocation == null)
+            ? {}
+            : {
+                Marker(
+                  markerId: const MarkerId('m1'),
+                  position: _pickedLocation!,
+                  // change default marker color to green
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueGreen,
+                  ),
+                ),
+              },
       ),
     );
   }
