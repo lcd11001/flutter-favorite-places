@@ -29,6 +29,11 @@ if (flutterMinSdkVersion == null) {
     flutterMinSdkVersion = flutter.minSdkVersion
 }
 
+def flutterGoogleMapsApiKey = localProperties.getProperty('flutter.GOOGLE_MAPS_API_KEY')
+if (flutterGoogleMapsApiKey == null) {
+    flutterGoogleMapsApiKey = 'GOOGLE_MAPS_API_KEY'
+}
+
 android {
     namespace "com.lcdsoft.flutter.favorite_places"
     compileSdk flutter.compileSdkVersion
@@ -56,6 +61,10 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
+        manifestPlaceholders += [
+            'GOOGLE_MAPS_API_KEY': flutterGoogleMapsApiKey
+        ]
     }
 
     buildTypes {

@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:favorite_places/api/google_maps_api.dart';
+import 'package:favorite_places/models/place_location.dart';
+import 'package:favorite_places/screens/google_maps_screen.dart';
 import 'package:favorite_places/widgets/place_portrait.dart';
 import 'package:flutter/material.dart';
 
 import 'package:favorite_places/models/place.dart';
 
-import '../widgets/place_text.dart';
+import 'package:favorite_places/widgets/place_text.dart';
 
 class PlaceDetailScreen extends StatelessWidget {
   final Place place;
@@ -32,13 +34,18 @@ class PlaceDetailScreen extends StatelessWidget {
             right: 0,
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 70,
-                  backgroundImage: CachedNetworkImageProvider(
-                    GoogleMapsApi.getStaticMapImageUrl(
-                      place.latitude,
-                      place.longitude,
-                      zoom: 16,
+                GestureDetector(
+                  onTap: () {
+                    _openMapScreen(context, place);
+                  },
+                  child: CircleAvatar(
+                    radius: 70,
+                    backgroundImage: CachedNetworkImageProvider(
+                      GoogleMapsApi.getStaticMapImageUrl(
+                        place.latitude,
+                        place.longitude,
+                        zoom: 16,
+                      ),
                     ),
                   ),
                 ),
@@ -64,6 +71,21 @@ class PlaceDetailScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _openMapScreen(BuildContext context, Place place) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => GoogleMapsScreen(
+          location: PlaceLocation(
+            latitude: place.latitude,
+            longitude: place.longitude,
+            address: place.address,
+          ),
+          isSelecting: false,
+        ),
       ),
     );
   }
