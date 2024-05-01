@@ -31,6 +31,8 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen> {
         widget.location.latitude,
         widget.location.longitude,
       );
+    } else {
+      _pickedLocation = null;
     }
   }
 
@@ -45,7 +47,9 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen> {
           if (widget.isSelecting)
             IconButton(
               icon: const Icon(Icons.save),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop(_pickedLocation);
+              },
             ),
         ],
       ),
@@ -55,7 +59,7 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen> {
             widget.location.latitude,
             widget.location.longitude,
           ),
-          zoom: 16,
+          zoom: 18,
         ),
         onTap: (position) {
           if (widget.isSelecting) {

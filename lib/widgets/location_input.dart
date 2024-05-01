@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:favorite_places/api/google_maps_api.dart';
 import 'package:favorite_places/models/place_location.dart';
+import 'package:favorite_places/screens/google_maps_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
@@ -48,21 +50,8 @@ class _LocationInputState extends State<LocationInput> {
     });
 
     locationData = await location.getLocation();
-    debugPrint('Location: ${locationData.latitude}, ${locationData.longitude}');
-    final address = await GoogleMapsApi.getAddress(
-        locationData.latitude!, locationData.longitude!);
-    debugPrint('Address: $address');
 
-    setState(() {
-      _pickedLocation = PlaceLocation(
-        latitude: locationData.latitude!,
-        longitude: locationData.longitude!,
-        address: address,
-      );
-      _isGettingLocation = false;
-    });
-
-    widget.onPickedLocation(_pickedLocation!);
+    await _dispatchLocation(locationData.latitude!, locationData.longitude!);
   }
 
   Widget buildPreviewMap() {
@@ -183,7 +172,7 @@ class _LocationInputState extends State<LocationInput> {
               ),
               Expanded(
                 child: TextButton.icon(
-                  onPressed: () {},
+                  onPressed: _pickMapLocation,
                   icon: const Icon(
                     Icons.map,
                     size: 20,
@@ -196,5 +185,45 @@ class _LocationInputState extends State<LocationInput> {
         ),
       ],
     );
+  }
+
+  void _pickMapLocation() async {
+    final locationData = await Navigator.of(context).push<LatLng>(
+      MaterialPageRoute(
+        builder: (ctx) => const GoogleMapsScreen(
+          isSelecting: true,
+        ),
+      ),
+    );
+
+    if (locationData == null) {
+      return;
+    }
+
+    await _dispatchLocation(locationData.latitude, locationData.longitude);
+  }
+
+  Future<void> _dispatchLocation(double latitude, double longitude) async {
+    setState(() {
+      _isGettingLocation = true;
+    });
+
+    debugPrint('Location: $latitude, $longitude');
+    final address = await GoogleMapsApi.getAddress(
+      latitude,
+      longitude,
+    );
+    debugPrint('Address: $address');
+
+    setState(() {
+      _pickedLocation = PlaceLocation(
+        latitude: latitude,
+        longitude: longitude,
+        address: address,
+      );
+      _isGettingLocation = false;
+    });
+
+    widget.onPickedLocation(_pickedLocation!);
   }
 }
