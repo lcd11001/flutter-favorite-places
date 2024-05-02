@@ -107,9 +107,7 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
       // Save form
       _formKey.currentState!.save();
 
-      final id = uuid.v4();
-      Place newPlace = Place(
-        id: id,
+      Place newPlace = Place.create(
         title: _titleController.text,
         address: _pickedLocation!.address,
         imageUrl: _pickedImage!.path,

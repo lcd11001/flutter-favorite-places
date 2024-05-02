@@ -1,13 +1,10 @@
 import 'package:favorite_places/utils/file_helper.dart';
 import 'package:favorite_places/utils/sqlite_helper.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uuid/uuid.dart';
 
 import 'package:favorite_places/models/place.dart';
 
 part 'places_provider.g.dart';
-
-const uuid = Uuid();
 
 @riverpod
 class AsyncPlace extends _$AsyncPlace {
@@ -23,9 +20,7 @@ class AsyncPlace extends _$AsyncPlace {
     return List.generate(
       10,
       (index) {
-        final id = uuid.v4();
-        return Place(
-          id: id,
+        return Place.create(
           title: 'Place title ${index + 1}',
           address: 'Place address ${index + 1}',
           imageUrl: 'https://picsum.photos/seed/$id/200',
@@ -35,6 +30,7 @@ class AsyncPlace extends _$AsyncPlace {
       },
     );
     */
+
     final places = await SqliteHelper().queryAll();
     return places.map((place) => Place.fromJson(place)).toList();
   }
