@@ -190,8 +190,14 @@ class _LocationInputState extends State<LocationInput> {
   void _pickMapLocation() async {
     final locationData = await Navigator.of(context).push<LatLng>(
       MaterialPageRoute(
-        builder: (ctx) => const GoogleMapsScreen(
+        builder: (ctx) => GoogleMapsScreen(
           isSelecting: true,
+          location: _pickedLocation ??
+              const PlaceLocation(
+                latitude: 37.422,
+                longitude: -122.084,
+                address: 'Google Headquaters',
+              ),
         ),
       ),
     );
