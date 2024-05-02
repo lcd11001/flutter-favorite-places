@@ -10,7 +10,7 @@ const _uuid = Uuid();
 
 @freezed
 class Place with _$Place {
-  factory Place({
+  factory Place._({
     required String id,
     required String title,
     required String address,
@@ -26,7 +26,7 @@ class Place with _$Place {
     required double latitude,
     required double longitude,
   }) =>
-      Place(
+      Place._(
         id: _uuid.v4(),
         title: title,
         address: address,
