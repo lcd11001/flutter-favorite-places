@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:path/path.dart' as path;
 
@@ -10,6 +11,7 @@ class FileHelper {
     final appDir = await syspaths.getApplicationDocumentsDirectory();
     final srcName = path.basename(srcFile.path);
     final destName = path.join(appDir.path, srcName);
+    debugPrint('save from ${srcFile.path} to $destName');
     final destFile = await srcFile.copy(destName);
     return destFile;
   }

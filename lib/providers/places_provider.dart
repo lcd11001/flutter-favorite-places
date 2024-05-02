@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:favorite_places/utils/file_helper.dart';
+import 'package:favorite_places/utils/sqlite_helper.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
-import 'package:path_provider/path_provider.dart' as syspaths;
-import 'package:path/path.dart' as path;
 
 import 'package:favorite_places/models/place.dart';
 
@@ -20,6 +17,7 @@ class AsyncPlace extends _$AsyncPlace {
   }
 
   Future<List<Place>> _fetchPlaces() async {
+    /*
     await Future.delayed(const Duration(seconds: 1));
 
     return List.generate(
@@ -36,6 +34,9 @@ class AsyncPlace extends _$AsyncPlace {
         );
       },
     );
+    */
+    final places = await SqliteHelper().queryAll();
+    return places.map((place) => Place.fromJson(place)).toList();
   }
 
   Future<void> addPlace(Place place) async {
@@ -45,6 +46,8 @@ class AsyncPlace extends _$AsyncPlace {
         final imageFile = await FileHelper.saveFromPath(place.imageUrl);
         place = place.copyWith(imageUrl: imageFile?.path ?? '');
       }
+
+      SqliteHelper().insert(place.toJson());
 
       return [place, ...state.value ?? []];
     });
@@ -57,6 +60,8 @@ class AsyncPlace extends _$AsyncPlace {
       if (place != null) {
         await FileHelper.deleteFromPath(place.imageUrl);
       }
+
+      SqliteHelper().delete(id);
 
       final remainPlaces = state.value?.where((place) => place.id != id);
       return [...remainPlaces ?? []];
