@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:favorite_places/api/bing_maps_api.dart';
 import 'package:favorite_places/api/google_maps_api.dart';
 import 'package:favorite_places/models/place_location.dart';
 import 'package:favorite_places/screens/google_maps_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+
+const bool _kUseGoogleMaps = !true;
 
 class LocationInput extends StatefulWidget {
   final void Function(PlaceLocation location) onPickedLocation;
@@ -96,11 +99,17 @@ class _LocationInputState extends State<LocationInput> {
           width: double.infinity,
           height: double.infinity,
           fit: BoxFit.cover,
-          imageUrl: GoogleMapsApi.getStaticMapImageUrl(
-            _pickedLocation!.latitude,
-            _pickedLocation!.longitude,
-            zoom: 16,
-          ),
+          imageUrl: _kUseGoogleMaps
+              ? GoogleMapsApi.getStaticMapImageUrl(
+                  _pickedLocation!.latitude,
+                  _pickedLocation!.longitude,
+                  zoom: 16,
+                )
+              : BingMapsApi.getStaticMapImageUrl(
+                  _pickedLocation!.latitude,
+                  _pickedLocation!.longitude,
+                  zoom: 16,
+                ),
           placeholder: (context, url) => const Center(
             child: CircularProgressIndicator(),
           ),
@@ -136,7 +145,7 @@ class _LocationInputState extends State<LocationInput> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    // final textTheme = Theme.of(context).textTheme;
 
     return Column(
       children: [
@@ -215,10 +224,15 @@ class _LocationInputState extends State<LocationInput> {
     });
 
     debugPrint('Location: $latitude, $longitude');
-    final address = await GoogleMapsApi.getAddress(
-      latitude,
-      longitude,
-    );
+    final address = _kUseGoogleMaps
+        ? await GoogleMapsApi.getAddress(
+            latitude,
+            longitude,
+          )
+        : await BingMapsApi.getAddress(
+            latitude,
+            longitude,
+          );
     debugPrint('Address: $address');
 
     setState(() {

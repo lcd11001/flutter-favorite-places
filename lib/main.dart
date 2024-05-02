@@ -1,3 +1,4 @@
+import 'package:favorite_places/api/bing_maps_api.dart';
 import 'package:favorite_places/api/google_maps_api.dart';
 import 'package:favorite_places/screens/places_screen.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,10 @@ Future<void> main() async {
   if (dotenv.env.containsKey('GOOGLE_MAPS_API_KEY')) {
     GoogleMapsApi.kKey = dotenv.env['GOOGLE_MAPS_API_KEY']!;
     debugPrint('dotevn::Google Maps API Key: ${GoogleMapsApi.kKey}');
+  }
+  if (dotenv.env.containsKey('BING_MAPS_API_KEY')) {
+    BingMapsApi.kKey = dotenv.env['BING_MAPS_API_KEY']!;
+    debugPrint('dotevn::Bing Maps API Key: ${BingMapsApi.kKey}');
   }
 
   runApp(const MainApp());
